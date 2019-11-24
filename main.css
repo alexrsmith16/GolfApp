@@ -1,0 +1,122 @@
+html, body {
+    margin: 0;
+    height: 100%;
+}
+body {
+    background-color: rgb(43, 43, 43);
+}
+#landing_header {
+    margin: 0;
+    padding: 50px 0;
+    font-family: Helvetica, sans-serif;
+    font-weight: 100;
+    text-align: center;
+    color: #FFFFFF;
+    transition: all 1s ease-in-out;
+}
+#landing_header.disappear {
+    margin-top: -120px;
+}
+#courses {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    height: 200px;
+    width: 100%;
+    margin: 0 auto;
+    transition: all 1s ease-in-out;
+}
+.card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 5px;
+}
+#fox_hollow {
+    background-image: url("fox-hollow.jpg");
+}
+#thanksgiving_point {
+    background-image: url("thanksgiving-point.jpg");
+}
+#spanish_oaks {
+    background-image: url("spanish-oaks.jpg");
+}
+.card-img {
+    width: 350px;
+    height: 200px;
+    border-radius: 5px;
+    background-size: cover;
+    transition: all 1s ease-in-out;
+}
+.card-img:hover {
+    filter: blur(2px);
+    cursor: pointer;
+    transition-property: width, height, filter;
+    transition-duration: 1s, 1s, .3s;
+    transition-timing-function: ease-in-out;
+}
+.card-img:hover + .card-header {
+    display: flex;
+}
+.card-header:hover {
+    cursor: pointer;
+    display: flex;
+}
+#fox_hollow~.card-header{
+    border: 1px solid #19705b;
+}
+#thanksgiving_point~.card-header{
+    border: 1px solid #a82d3e;
+}
+#spanish_oaks~.card-header{
+    border: 1px solid #6c51a5;
+}
+.card-header {
+    position: absolute;
+    width: 250px;
+    height: 90px;
+    margin: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    font-family: Helvetica, sans-serif;
+    color: #FFFFFF;
+    transition: all 1s ease-in-out;
+}
+.card h2 {
+    font-weight: 100;
+    margin: 0;
+}
+
+/*Playing Game*/
+#courses.playing-game {
+    width: 800px;
+}
+#courses.playing-game .card-img {
+    width: 250px;
+    height: 60px;
+    filter: blur(2px);
+}
+#courses.playing-game #fox_hollow {
+    background-position-y: 40%;
+}
+#courses.playing-game #thanksgiving_point {
+    background-position-y: 22%;
+}
+#courses.playing-game #spanish_oaks {
+    background-position-y: 15%;
+}
+#courses.playing-game .card-header {
+    width: 250px;
+    height: 60px;
+    border-radius: 5px;
+    border: none;
+}
+#courses.playing-game .active .card-header {
+    display: flex;
+}
+#courses.playing-game h2 {
+    /*font-size: 25px;*/
+}

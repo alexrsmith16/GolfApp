@@ -3,17 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <title>Golf App</title>
-    <link type="text/css" href="main.css">
+    <link type="text/css" rel="stylesheet" href="main.css">
     <script src="jquery-3.4.1.min.js"></script>
     <script src="main.js" defer></script>
-    <style>
-        .table {
-            display: flex;
-            justify-content: space-between;
-        }
-    </style>
 </head>
 <body>
-<div class="table"></div>
+<div class="content">
+    <h1 id="landing_header">Which course are you playing on?</h1>
+    <div id="courses">
+        <div class="card" id="18300" onclick="clickCard(this)">
+            <div id="fox_hollow" class="card-img"></div>
+            <div class="card-header">
+                <h2>Fox Hollow</h2>
+            </div>
+        </div>
+        <div class="card" id="11819" onclick="clickCard(this)">
+            <div id="thanksgiving_point" class="card-img"></div>
+            <div class="card-header">
+                <h2>Thanksgiving Point</h2>
+            </div>
+        </div>
+        <div class="card" id="19002" onclick="clickCard(this)">
+            <div id="spanish_oaks" class="card-img"></div>
+            <div class="card-header">
+                <h2>Spanish Oaks</h2>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
