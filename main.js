@@ -1,6 +1,9 @@
-let COURSES = document.getElementById("courses");
-let cardHeaders = document.getElementsByClassName("card-header");
-let LANDING_HEADER = document.getElementById("landing_header");
+const COURSES = document.getElementById("courses");
+const cardHeaders = document.getElementsByClassName("card-header");
+const LANDING_HEADER = document.getElementById("landing_header");
+const SCORECARD = document.getElementById('scorecard');
+const BASE_URL = 'https://golf-courses-api.herokuapp.com/courses/';
+
 for (let i of cardHeaders) {
     i.addEventListener('mouseenter', e => {
         i.previousElementSibling.style.filter = "blur(2px)";
@@ -25,24 +28,45 @@ function clickCard(element) {
     LANDING_HEADER.classList.add("disappear");
     COURSES.classList.add("playing-game");
     element.classList.add("active");
-    switch (element.id) {
-        case 0:
+    console.log(element.id);
+    // switch (element.id) {
+    //     case 0:
 
 
+    // }
+    startGame(element.id);
+}
+
+function startGame(courseID) {
+    get(BASE_URL + courseID).then(res => {
+        printCard(res.data.holes);
+        console.log(res);
+    });
+}
+
+function printCard(holes) {
+    console.log(holes);
+    let height = holes[0].teeBoxes.length;
+    let element = '';
+    for (let i = 0; i < height; i++) {
+        element += `<div class='row'>`;
+        for (let j = 0; j < 19; j++) {
+            if (i === 0) {
+                if (j === 0) element += `<div class='first'>Holes</div>`;
+                else element += `<div>${j}</div>`;
+            }
+            else {
+                if (j === 0) element += `<div class='first'>${holes[0].teeBoxes[i].teeColorType}</div>`;
+                else {
+                    let cell = holes[j - 1].teeBoxes[i];
+                    element += `<div class=${cell.teeColorType}>${cell.yards}</div>`;
+                }
+            }
+        }
+        element += `</div>`;
     }
-    startGame()
+    SCORECARD.innerHTML = element;
 }
-
-function startGame(test) {
-
-}
-
-
-
-
-
-
-
 
 
 

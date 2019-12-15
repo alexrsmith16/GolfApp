@@ -117,6 +117,39 @@ body {
 #courses.playing-game .active .card-header {
     display: flex;
 }
-#courses.playing-game h2 {
-    /*font-size: 25px;*/
+
+#scorecard .row {
+    display: flex;
+    font-family: Helvetica, sans-serif;
+    text-align: center;
+}
+
+#scorecard .row > div {
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+    padding: 5px;
+    width: 35px;
+}
+#scorecard .row > div.first {
+    width: 200px;
+    text-align: left;
+}
+
+#scorecard .row > div.white {
+    background-color: rgb(201, 201, 201);
+}
+#scorecard .row > div.black {
+    background-color: rgb(73, 73, 73);
+}
+#scorecard .row > div.blue {
+    background-color: rgb(46, 57, 150);
+}
+#scorecard .row > div.red {
+    background-color: rgb(128, 46, 46);
+}
+#scorecard .row > div.green {
+    background-color: rgb(39, 107, 60);
+}
+#scorecard .row > div.yellow {
+    background-color: rgb(184, 162, 64);
 }
