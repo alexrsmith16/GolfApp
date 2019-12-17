@@ -1,8 +1,11 @@
 const COURSES = document.getElementById("courses");
 const cardHeaders = document.getElementsByClassName("card-header");
 const LANDING_HEADER = document.getElementById("landing_header");
-const SCORECARD = document.getElementById('scorecard');
+const GRID = document.getElementById('grid');
+const HEAD = document.getElementById('head');
 const BASE_URL = 'https://golf-courses-api.herokuapp.com/courses/';
+let activeTee;
+let activeCourse;
 
 for (let i of cardHeaders) {
     i.addEventListener('mouseenter', e => {
@@ -29,43 +32,64 @@ function clickCard(element) {
     COURSES.classList.add("playing-game");
     element.classList.add("active");
     console.log(element.id);
-    // switch (element.id) {
-    //     case 0:
-
-
-    // }
     startGame(element.id);
 }
 
 function startGame(courseID) {
     get(BASE_URL + courseID).then(res => {
-        printCard(res.data.holes);
-        console.log(res);
+        activeCourse = res.data.holes;
+        console.log(res.data);
+        printCard();
     });
 }
 
-function printCard(holes) {
-    console.log(holes);
-    let height = holes[0].teeBoxes.length;
-    let element = '';
-    for (let i = 0; i < height; i++) {
-        element += `<div class='row'>`;
-        for (let j = 0; j < 19; j++) {
-            if (i === 0) {
-                if (j === 0) element += `<div class='first'>Holes</div>`;
-                else element += `<div>${j}</div>`;
-            }
-            else {
-                if (j === 0) element += `<div class='first'>${holes[0].teeBoxes[i].teeColorType}</div>`;
-                else {
-                    let cell = holes[j - 1].teeBoxes[i];
-                    element += `<div class=${cell.teeColorType}>${cell.yards}</div>`;
-                }
-            }
-        }
-        element += `</div>`;
+function handleTeeSelect(element) {
+    activeTee = element.getAttribute('data');
+    printCard()
+}
+
+function printCard() {
+    let active = '';
+    let element = `<div class='tee_select'>`;
+    for (let i of activeCourse[0].teeBoxes) {
+        if (i.teeType === "auto change location") break;
+        if (i.teeColorType === activeTee) active = 'active';
+        element += `<button class='${i.teeColorType} ${active}' data='${i.teeColorType}' onClick='handleTeeSelect(this)'>${i.teeType}</button>`;
+        active = '';
     }
-    SCORECARD.innerHTML = element;
+    element += 
+    `</div>
+    <div class='game-option'>
+        <button id='9_hole'>9 Holes</b onClick='handleGameOptionClick(this)'utton>
+        <button id='18_hole' onClick='handleGameOptionClick(this)>18 Holes</button>
+    </div>`
+    HEAD.innerHTML = element;
+    element = '';
+    
+    //Out
+    element += `<div class='out'><div class='row'><div>Hole</div>`;
+    for (let i = 1; i < 10; i++) element += `<div>${i}</div>`;
+    element += `<div>Out</div></div>`;
+
+    element += `</div>`;
+    //In
+    element += `<div class='in'><div class='row'>`;
+    for (let i = 1; i < 10; i++) element += `<div>${i}</div>`;
+    element += `<div>In</div><div>Total</div></div>`;
+
+    element += `</div>`;
+
+
+    GRID.innerHTML = element;
+    //9/18
+    //Grid
+    //  numbers
+    //  tee
+    //  handicap
+    //  players
+    //  totals
+    //  par
+    
 }
 
 
