@@ -4,8 +4,10 @@ const LANDING_HEADER = document.getElementById("landing_header");
 const GRID = document.getElementById('grid');
 const HEAD = document.getElementById('head');
 const BASE_URL = 'https://golf-courses-api.herokuapp.com/courses/';
-let activeTee;
+let activeTee = 'white';
 let activeCourse;
+let activeHole = '9_hole';
+let playerArray = [{name: "", arr: []}];
 
 for (let i of cardHeaders) {
     i.addEventListener('mouseenter', e => {
@@ -31,7 +33,6 @@ function clickCard(element) {
     LANDING_HEADER.classList.add("disappear");
     COURSES.classList.add("playing-game");
     element.classList.add("active");
-    console.log(element.id);
     startGame(element.id);
 }
 
@@ -45,7 +46,33 @@ function startGame(courseID) {
 
 function handleTeeSelect(element) {
     activeTee = element.getAttribute('data');
-    printCard()
+    printCard();
+}
+
+function handleGameOptionClick(element) {
+    activeHole = element.id;
+    printCard();
+}
+
+function handleAddPlayer() {
+    playerArray.push({name: "", arr: []});
+    printCard();
+}
+
+function handleNameChange(e) {
+    playerArray[e.id.charAt(7)].name = e.value;
+}
+
+function handleScoreInput(e) {
+    if (!parseInt(e.value)) {
+        e.value = "";
+        return;
+    }
+    let x = parseInt(e.id.split('_')[0]);
+    let y = parseInt(e.id.split('_')[1]);
+    playerArray[x].arr[y] = parseInt(e.value);
+    let id = y < 9 ? 'out_' + x : 'in_' + x;
+    document.getElementById(id).innerText = playerArray[x].arr.reduce((a,b) => a + b, 0);
 }
 
 function printCard() {
@@ -60,52 +87,110 @@ function printCard() {
     element += 
     `</div>
     <div class='game-option'>
-        <button id='9_hole'>9 Holes</b onClick='handleGameOptionClick(this)'utton>
-        <button id='18_hole' onClick='handleGameOptionClick(this)>18 Holes</button>
-    </div>`
+        <button id='9_hole' class='${activeHole === '9_hole' ? 'active' : ''}' onClick='handleGameOptionClick(this)'>9 Holes</button>
+        <button id='18_hole' class='${activeHole === '18_hole' ? 'active' : ''}' onClick='handleGameOptionClick(this)'>18 Holes</button>
+    </div>
+    <div class='add-player'><button onclick='handleAddPlayer()'>Add Player</button>`
     HEAD.innerHTML = element;
     element = '';
     
     //Out
-    element += `<div class='out'><div class='row'><div>Hole</div>`;
+    let found = activeCourse[0].teeBoxes.findIndex(element => element.teeColorType === activeTee);
+    let tee = activeCourse[0].teeBoxes[found];
+    console.log(tee);
+    let teeTypeUpper = tee.teeType.charAt(0).toUpperCase() + tee.teeType.slice(1, tee.teeType.length);
+    let teeColor = tee.teeColorType;
+    let outerTotalYards = 0;
+    let par = 0;
+    
+    //header row
+    element += `<div class='out'><div class='row'><div class='first'>Hole</div>`;
     for (let i = 1; i < 10; i++) element += `<div>${i}</div>`;
-    element += `<div>Out</div></div>`;
+    element += `<div>OUT</div></div>`
+    //tee row
+    element +=`<div class='row'><div class='first ${teeColor}'>${teeTypeUpper}</div>`;
+    for (let i = 0; i < 9; i++) {
+        let temp = tee.yards;
+        outerTotalYards += temp;
+        element += `<div class='${teeColor}'>${temp}</div>`;
+    }
+    element += `<div class='${teeColor}'>${outerTotalYards}</div></div>`
+    //handicap row
+    element +=`<div class='row handicap'><div class='first'>Handicap</div>`;
+    for (let i = 0; i < 9; i++) {
+        element += `<div>${activeCourse[i].teeBoxes[found].hcp}</div>`;
+    }
+    element += `<div>-</div></div>`
+    //player rows
+    for (let i = 0; i < playerArray.length; i++) {
+        element += 
+        `<div class='row'>
+            <input 
+            class='first'
+            id='player_${i}' 
+            onblur='handleNameChange(this)'
+            value='${playerArray[i].name}'>
+            </input>`;
+        for (let j = 0; j < 9; j++) {
+            let content = playerArray[i].arr[j];
+            element += `<input onblur='handleScoreInput(this)' id='${i}_${j}' value='${content ? content : ""}'></input>`
+        }
+        element += `<div id='out_${i}'>${playerArray[i].arr.reduce((a,b) => a + b, 0)}</div></div>`
+    }
+    //par row
+    element +=`<div class='row par'><div class='first'>Par</div>`;
+    for (let i = 0; i < 9; i++) {
+        let temp = activeCourse[i].teeBoxes[found].par;
+        par += temp;
+        element += `<div>${temp}</div>`;
+    }
+    element += `<div>${par}</div></div>`
 
     element += `</div>`;
+
     //In
-    element += `<div class='in'><div class='row'>`;
-    for (let i = 1; i < 10; i++) element += `<div>${i}</div>`;
-    element += `<div>In</div><div>Total</div></div>`;
-
-    element += `</div>`;
-
+    if (activeHole === '18_hole') {
+        //header row
+        element += `<div class='in'><div class='row'>`;
+        for (let i = 1; i < 10; i++) element += `<div>${i}</div>`;
+        element += `<div>IN</div>`
+        //tee row
+        element += `<div>Total</div></div><div class='row'>`;
+        let innerTotalYards = 0;
+        for (let i = 9; i < 18; i++) {
+            let temp = tee.yards;
+            innerTotalYards += temp;
+            element += `<div class='${teeColor}'>${temp}</div>`;
+        }
+        element += `<div class='${teeColor}'>${innerTotalYards}</div>
+                    <div class='${teeColor}'>${innerTotalYards + outerTotalYards}</div>
+                    </div>`
+        //handicap row
+        element +=`<div class='row handicap'>`;
+        for (let i = 9; i < 18; i++) {
+            element += `<div>${activeCourse[i].teeBoxes[found].hcp}</div>`;
+        }
+        element += `<div>-</div><div>HDCTotal</div></div>`
+        //player rows
+        for (let i = 0; i < playerArray.length; i++) {
+            element += `<div class='row'>`;
+            for (let j = 9; j < 18; j++) {
+                let content = playerArray[i].arr[j];
+                element += `<input onblur='handleScoreInput(this)' id='${i}_${j}' value='${content ? content : ""}'></input>`
+            }
+            element += `<div id='in_${i}'>${playerArray[i].arr.reduce((a,b) => a + b, 0)}</div></div>`
+        }
+        //par row
+        element +=`<div class='row par'>`;
+        for (let i = 9; i < 18; i++) {
+            let temp = activeCourse[i].teeBoxes[found].par;
+            par += temp;
+            element += `<div>${temp}</div>`;
+        }
+        element += `<div>${par}</div></div>`
+        element += `</div>`;
+    }
+        
 
     GRID.innerHTML = element;
-    //9/18
-    //Grid
-    //  numbers
-    //  tee
-    //  handicap
-    //  players
-    //  totals
-    //  par
-    
 }
-
-
-
-// let numplayers = 5;
-// let numholes = 18;
-// function table() {
-//     let toappend = "";
-//     for (let i = 0; i < numholes; i++) {
-//         toappend += `<div class="table-column">`;
-//         for (let j = 0; j < numplayers; j++) {
-//             toappend += `<div>${i},${j}</div>`;
-//             console.log(j);
-//         }
-//         toappend += `</div>`;
-//     }
-//     $(".table").html(toappend);
-// }
-// table();

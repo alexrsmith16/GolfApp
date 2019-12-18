@@ -5,6 +5,11 @@ html, body {
 body {
     background-color: rgb(43, 43, 43);
 }
+
+button:focus, div:focus, input:focus {
+    outline: none;
+}
+
 #landing_header {
     margin: 0;
     padding: 50px 0;
@@ -14,9 +19,11 @@ body {
     color: #FFFFFF;
     transition: all 1s ease-in-out;
 }
+
 #landing_header.disappear {
     margin-top: -120px;
 }
+
 #courses {
     display: flex;
     justify-content: space-around;
@@ -26,6 +33,7 @@ body {
     margin: 0 auto;
     transition: all 1s ease-in-out;
 }
+
 .card {
     display: flex;
     justify-content: center;
@@ -33,15 +41,19 @@ body {
     overflow: hidden;
     border-radius: 5px;
 }
+
 #fox_hollow {
     background-image: url("fox-hollow.jpg");
 }
+
 #thanksgiving_point {
     background-image: url("thanksgiving-point.jpg");
 }
+
 #spanish_oaks {
     background-image: url("spanish-oaks.jpg");
 }
+
 .card-img {
     width: 350px;
     height: 200px;
@@ -49,6 +61,7 @@ body {
     background-size: cover;
     transition: all 1s ease-in-out;
 }
+
 .card-img:hover {
     filter: blur(2px);
     cursor: pointer;
@@ -56,22 +69,28 @@ body {
     transition-duration: 1s, 1s, .3s;
     transition-timing-function: ease-in-out;
 }
+
 .card-img:hover + .card-header {
     display: flex;
 }
+
 .card-header:hover {
     cursor: pointer;
     display: flex;
 }
+
 #fox_hollow~.card-header{
     border: 1px solid #19705b;
 }
+
 #thanksgiving_point~.card-header{
     border: 1px solid #a82d3e;
 }
+
 #spanish_oaks~.card-header{
     border: 1px solid #6c51a5;
 }
+
 .card-header {
     position: absolute;
     width: 250px;
@@ -85,6 +104,7 @@ body {
     color: #FFFFFF;
     transition: all 1s ease-in-out;
 }
+
 .card h2 {
     font-weight: 100;
     margin: 0;
@@ -120,9 +140,10 @@ body {
 
 #head button.white.active, .white {
     background-color: rgb(201, 201, 201);
+    color: #000000;
 }
 #head button.black.active, .black {
-    background-color: rgb(73, 73, 73);
+    background-color: #3e2742;
 }
 #head button.blue.active, .blue {
     background-color: rgb(46, 57, 150);
@@ -135,21 +156,32 @@ body {
 }
 #head button.yellow.active, .yellow {
     background-color: rgb(184, 162, 64);
+    color: #000000;
+}
+#head button.active {
+    background-color: rgb(39, 107, 60);
 }
 
 #head {
     display: flex;
     justify-content: space-around;
+    margin-bottom: 25px;
 }
-
 
 #head button{
     min-width: 100px;
     padding: 5px;
     background-color: rgb(54, 54, 54);
     color: rgb(184, 184, 184);
-    border: 1px solid rgb(184, 184, 184);
+    border-top: 1px solid rgb(0, 0, 0);
+    border-right: 1px solid rgb(0, 0, 0);
+    border-bottom: 1px solid rgb(0, 0, 0);
+    border-left: none;
     cursor: pointer;
+}
+
+#head button:nth-of-type(1) {
+    border-left: 1px solid #000000;
 }
 
 #head div {
@@ -159,7 +191,9 @@ body {
 
 #grid {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
+    color: rgb(184, 184, 184);
+    font-weight: 100;
 }
 
 #grid .row {
@@ -174,7 +208,23 @@ body {
     padding: 5px;
     width: 35px;
 }
-#grid .row > div.first {
-    width: 200px;
+
+#grid .row > input {
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+    border-left: none;
+    border-top: none;
+    padding: 5px;
+    width: 35px;
+    background-color: transparent;
+    color: rgb(184, 184, 184);
+    font-weight: 100;
+    font-size: 16px;
+    text-align: center;
+
+}
+
+#grid .row > div.first, #grid .row > input.first {
+    width: 100px;
     text-align: left;
 }
