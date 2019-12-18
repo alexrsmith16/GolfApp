@@ -6,7 +6,7 @@ const HEAD = document.getElementById('head');
 const BASE_URL = 'https://golf-courses-api.herokuapp.com/courses/';
 let activeTee = 'white';
 let activeCourse;
-let activeHole = '9_hole';
+let activeHole = '18_hole';
 let playerArray = [{name: "", arr: []}];
 
 for (let i of cardHeaders) {
@@ -71,8 +71,14 @@ function handleScoreInput(e) {
     let x = parseInt(e.id.split('_')[0]);
     let y = parseInt(e.id.split('_')[1]);
     playerArray[x].arr[y] = parseInt(e.value);
-    let id = y < 9 ? 'out_' + x : 'in_' + x;
-    document.getElementById(id).innerText = playerArray[x].arr.reduce((a,b) => a + b, 0);
+    let id = 'out_' + x;
+    let index = [0,9];
+    if (y >= 9) {
+        id = 'in_' + x;
+        index = [9,18];
+    }
+    document.getElementById(id).innerText = playerArray[x].arr.slice(index[0],index[1]).reduce((a,b) => a + b, 0);
+    document.getElementById('tot_' + x).innerText = playerArray[x].arr.reduce((a,b) => a + b, 0);
 }
 
 function printCard() {
@@ -101,7 +107,8 @@ function printCard() {
     let teeTypeUpper = tee.teeType.charAt(0).toUpperCase() + tee.teeType.slice(1, tee.teeType.length);
     let teeColor = tee.teeColorType;
     let outerTotalYards = 0;
-    let par = 0;
+    let parOut = 0;
+    let hcpOut = 0;
     
     //header row
     element += `<div class='out'><div class='row'><div class='first'>Hole</div>`;
@@ -118,9 +125,11 @@ function printCard() {
     //handicap row
     element +=`<div class='row handicap'><div class='first'>Handicap</div>`;
     for (let i = 0; i < 9; i++) {
-        element += `<div>${activeCourse[i].teeBoxes[found].hcp}</div>`;
+        let temp = activeCourse[i].teeBoxes[found].hcp;
+        hcpOut += temp;
+        element += `<div>${temp}</div>`;
     }
-    element += `<div>-</div></div>`
+    element += `<div>${hcpOut}</div></div>`
     //player rows
     for (let i = 0; i < playerArray.length; i++) {
         element += 
@@ -135,16 +144,16 @@ function printCard() {
             let content = playerArray[i].arr[j];
             element += `<input onblur='handleScoreInput(this)' id='${i}_${j}' value='${content ? content : ""}'></input>`
         }
-        element += `<div id='out_${i}'>${playerArray[i].arr.reduce((a,b) => a + b, 0)}</div></div>`
+        element += `<div id='out_${i}'>${playerArray[i].arr.slice(0,9).reduce((a,b) => a + b, 0)}</div></div>`
     }
     //par row
     element +=`<div class='row par'><div class='first'>Par</div>`;
     for (let i = 0; i < 9; i++) {
         let temp = activeCourse[i].teeBoxes[found].par;
-        par += temp;
+        parOut += temp;
         element += `<div>${temp}</div>`;
     }
-    element += `<div>${par}</div></div>`
+    element += `<div>${parOut}</div></div>`
 
     element += `</div>`;
 
@@ -167,10 +176,13 @@ function printCard() {
                     </div>`
         //handicap row
         element +=`<div class='row handicap'>`;
+        let hcpIn = 0;
         for (let i = 9; i < 18; i++) {
-            element += `<div>${activeCourse[i].teeBoxes[found].hcp}</div>`;
+            let temp = activeCourse[i].teeBoxes[found].hcp;
+            hcpIn += temp;
+            element += `<div>${temp}</div>`;
         }
-        element += `<div>-</div><div>HDCTotal</div></div>`
+        element += `<div>${hcpIn}</div><div>${hcpOut + hcpIn}</div></div>`
         //player rows
         for (let i = 0; i < playerArray.length; i++) {
             element += `<div class='row'>`;
@@ -178,16 +190,18 @@ function printCard() {
                 let content = playerArray[i].arr[j];
                 element += `<input onblur='handleScoreInput(this)' id='${i}_${j}' value='${content ? content : ""}'></input>`
             }
-            element += `<div id='in_${i}'>${playerArray[i].arr.reduce((a,b) => a + b, 0)}</div></div>`
+            element += `<div id='in_${i}'>${playerArray[i].arr.slice(9,18).reduce((a,b) => a + b, 0)}</div>
+                        <div id='tot_${i}'>${playerArray[i].arr.reduce((a,b) => a + b, 0)}</div></div>`
         }
         //par row
         element +=`<div class='row par'>`;
+        let parIn = 0;
         for (let i = 9; i < 18; i++) {
             let temp = activeCourse[i].teeBoxes[found].par;
-            par += temp;
+            parIn += temp;
             element += `<div>${temp}</div>`;
         }
-        element += `<div>${par}</div></div>`
+        element += `<div>${parIn}</div><div>${parOut + parIn}</div></div>`
         element += `</div>`;
     }
         
