@@ -60,6 +60,13 @@ function handleAddPlayer() {
 }
 
 function handleNameChange(e) {
+    for (let i of playerArray) {
+        if (i.name === e.value) {
+            e.value = "";
+            alert('Cannot have duplicate names');
+            return;
+        }
+    }
     playerArray[e.id.charAt(7)].name = e.value;
 }
 
